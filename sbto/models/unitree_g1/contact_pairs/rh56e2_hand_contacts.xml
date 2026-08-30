@@ -1,0 +1,70 @@
+<mujoco>
+  <contact>
+
+    <!-- left hand - obj -->
+    <!-- <pair name="l_rh_left_hand_base_col0_obj" geom1="l_rh_left_hand_base_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/> -->
+    <pair name="l_rh_left_hand_base_col1_obj" geom1="l_rh_left_hand_base_col1" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_hand_base_col2_obj" geom1="l_rh_left_hand_base_col2" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_thumb_2_col0_obj" geom1="l_rh_left_thumb_2_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_thumb_3_col0_obj" geom1="l_rh_left_thumb_3_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_thumb_4_col0_obj" geom1="l_rh_left_thumb_4_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_index_1_col0_obj" geom1="l_rh_left_index_1_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_index_2_col0_obj" geom1="l_rh_left_index_2_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_middle_1_col0_obj" geom1="l_rh_left_middle_1_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_middle_2_col0_obj" geom1="l_rh_left_middle_2_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_ring_1_col0_obj" geom1="l_rh_left_ring_1_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_ring_2_col0_obj" geom1="l_rh_left_ring_2_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_pinky_1_col0_obj" geom1="l_rh_left_pinky_1_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="l_rh_left_pinky_2_col0_obj" geom1="l_rh_left_pinky_2_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+
+    <!-- right hand - obj -->
+    <!-- <pair name="r_rh_right_hand_base_col0_obj" geom1="r_rh_right_hand_base_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/> -->
+    <pair name="r_rh_right_hand_base_col1_obj" geom1="r_rh_right_hand_base_col1" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_hand_base_col2_obj" geom1="r_rh_right_hand_base_col2" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_thumb_2_col0_obj" geom1="r_rh_right_thumb_2_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_thumb_3_col0_obj" geom1="r_rh_right_thumb_3_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_thumb_4_col0_obj" geom1="r_rh_right_thumb_4_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_index_1_col0_obj" geom1="r_rh_right_index_1_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_index_2_col0_obj" geom1="r_rh_right_index_2_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_middle_1_col0_obj" geom1="r_rh_right_middle_1_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_middle_2_col0_obj" geom1="r_rh_right_middle_2_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_ring_1_col0_obj" geom1="r_rh_right_ring_1_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_ring_2_col0_obj" geom1="r_rh_right_ring_2_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_pinky_1_col0_obj" geom1="r_rh_right_pinky_1_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+    <pair name="r_rh_right_pinky_2_col0_obj" geom1="r_rh_right_pinky_2_col0" geom2="obj" solref="0.01 1." friction="1 1" condim="3"/>
+
+    <!-- left hand - floor -->
+    <!-- <pair name="l_rh_left_hand_base_col0_floor" geom1="l_rh_left_hand_base_col0" geom2="floor" condim="3"/> -->
+    <pair name="l_rh_left_hand_base_col1_floor" geom1="l_rh_left_hand_base_col1" geom2="floor" condim="3"/>
+    <pair name="l_rh_left_hand_base_col2_floor" geom1="l_rh_left_hand_base_col2" geom2="floor" condim="3"/>
+    <!-- <pair name="l_rh_left_thumb_2_col0_floor" geom1="l_rh_left_thumb_2_col0" geom2="floor" condim="3"/> -->
+    <!-- <pair name="l_rh_left_thumb_3_col0_floor" geom1="l_rh_left_thumb_3_col0" geom2="floor" condim="3"/> -->
+    <pair name="l_rh_left_thumb_4_col0_floor" geom1="l_rh_left_thumb_4_col0" geom2="floor" condim="3"/>
+    <!-- <pair name="l_rh_left_index_1_col0_floor" geom1="l_rh_left_index_1_col0" geom2="floor" condim="3"/> -->
+    <pair name="l_rh_left_index_2_col0_floor" geom1="l_rh_left_index_2_col0" geom2="floor" condim="3"/>
+    <!-- <pair name="l_rh_left_middle_1_col0_floor" geom1="l_rh_left_middle_1_col0" geom2="floor" condim="3"/> -->
+    <pair name="l_rh_left_middle_2_col0_floor" geom1="l_rh_left_middle_2_col0" geom2="floor" condim="3"/>
+    <!-- <pair name="l_rh_left_ring_1_col0_floor" geom1="l_rh_left_ring_1_col0" geom2="floor" condim="3"/> -->
+    <pair name="l_rh_left_ring_2_col0_floor" geom1="l_rh_left_ring_2_col0" geom2="floor" condim="3"/>
+    <!-- <pair name="l_rh_left_pinky_1_col0_floor" geom1="l_rh_left_pinky_1_col0" geom2="floor" condim="3"/> -->
+    <pair name="l_rh_left_pinky_2_col0_floor" geom1="l_rh_left_pinky_2_col0" geom2="floor" condim="3"/>
+
+    <!-- right hand - floor -->
+    <!-- <pair name="r_rh_right_hand_base_col0_floor" geom1="r_rh_right_hand_base_col0" geom2="floor" condim="3"/> -->
+    <pair name="r_rh_right_hand_base_col1_floor" geom1="r_rh_right_hand_base_col1" geom2="floor" condim="3"/>
+    <pair name="r_rh_right_hand_base_col2_floor" geom1="r_rh_right_hand_base_col2" geom2="floor" condim="3"/>
+    <!-- <pair name="r_rh_right_thumb_2_col0_floor" geom1="r_rh_right_thumb_2_col0" geom2="floor" condim="3"/> -->
+    <!-- <pair name="r_rh_right_thumb_3_col0_floor" geom1="r_rh_right_thumb_3_col0" geom2="floor" condim="3"/> -->
+    <pair name="r_rh_right_thumb_4_col0_floor" geom1="r_rh_right_thumb_4_col0" geom2="floor" condim="3"/>
+    <!-- <pair name="r_rh_right_index_1_col0_floor" geom1="r_rh_right_index_1_col0" geom2="floor" condim="3"/> -->
+    <pair name="r_rh_right_index_2_col0_floor" geom1="r_rh_right_index_2_col0" geom2="floor" condim="3"/>
+    <!-- <pair name="r_rh_right_middle_1_col0_floor" geom1="r_rh_right_middle_1_col0" geom2="floor" condim="3"/> -->
+    <pair name="r_rh_right_middle_2_col0_floor" geom1="r_rh_right_middle_2_col0" geom2="floor" condim="3"/>
+    <!-- <pair name="r_rh_right_ring_1_col0_floor" geom1="r_rh_right_ring_1_col0" geom2="floor" condim="3"/> -->
+    <pair name="r_rh_right_ring_2_col0_floor" geom1="r_rh_right_ring_2_col0" geom2="floor" condim="3"/>
+    <!-- <pair name="r_rh_right_pinky_1_col0_floor" geom1="r_rh_right_pinky_1_col0" geom2="floor" condim="3"/> -->
+    <pair name="r_rh_right_pinky_2_col0_floor" geom1="r_rh_right_pinky_2_col0" geom2="floor" condim="3"/>
+
+  </contact>
+
+</mujoco>

@@ -1,0 +1,4 @@
+[submodule "third_party/g1-rh56e2-assets"]
+	path = third_party/g1-rh56e2-assets
+	url = https://github.com/learnsyslab/g1-rh56e2-assets.git
+	branch = rl_tracking

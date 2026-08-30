@@ -1,0 +1,18 @@
+<mujoco>
+
+  <!-- rh56e2 variant of robot_obj.xml: keeps the wrist-obj pairs but drops
+       left_hand_obj/right_hand_obj (the coarse left_hand_collision/
+       right_hand_collision cylinder proxy), since rh56e2_hand_contacts.xml
+       supplies real per-segment hand-mesh contact pairs instead. Having
+       both active at once would double up contact at roughly the same
+       location. -->
+
+  <contact>
+
+    <!-- wrist - obj -->
+    <pair name="left_wrist_obj" geom1="left_wrist_collision" geom2="obj" solref="0.01 1" friction="1 1" condim="3"/>
+    <pair name="right_wrist_obj" geom1="right_wrist_collision" geom2="obj" solref="0.01 1" friction="1 1" condim="3"/>
+
+  </contact>
+
+</mujoco>

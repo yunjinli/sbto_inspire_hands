@@ -1,0 +1,19 @@
+# @package _global_
+# G1 + dummy hands (stock 29-dof skeleton with the rubber-hand visual mesh and
+# two box colliders per hand), robot-object reference tracking (box).
+#
+# Same DOF layout as the stock no-hands model, so it tracks the unmodified
+# OmniRetarget reference. Layered on top of task=g1/robot_object_ref (unchanged):
+# dummy-hand scene for rollout and reference, and the hand-specific penalties
+# turned on (they default to 0 in ConfigG1RobotObjRef).
+#
+# Run:
+#   python sbto/main.py +experiment=dummy_hands_box
+defaults:
+  - override /task/g1/sim/mj_scene@task.sim.mj_scene: dummy_hands_box
+  - override /task/g1/mj_scene_ref@task.mj_scene_ref: dummy_hands_box
+
+task:
+  cfg:
+    hand_floor_collision: 0.25
+    wrist_obj_collision: 0.25

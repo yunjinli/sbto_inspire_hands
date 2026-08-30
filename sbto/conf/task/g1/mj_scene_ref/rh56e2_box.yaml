@@ -1,0 +1,42 @@
+_target_: sbto.sim.scene_mj.MjScene
+cfg:
+  _target_: sbto.sim.scene_mj.ConfigMjScene
+  xml_scene_path: sbto/models/unitree_g1/scene_mjx_rh56e2.xml
+  xml_sensors_path:
+  - sbto/models/unitree_g1/sensors/feet_contact.xml
+  - sbto/models/unitree_g1/sensors/feet_pos.xml
+  - sbto/models/unitree_g1/sensors/rh56e2_hands_pos.xml
+  - sbto/models/unitree_g1/sensors/obj_collision.xml
+  - sbto/models/unitree_g1/sensors/obj.xml
+  - sbto/models/unitree_g1/sensors/rh56e2_hand_obj_contact.xml
+  - sbto/models/unitree_g1/sensors/torso.xml
+  - sbto/models/unitree_g1/sensors/self_collision.xml
+  xml_contact_pairs_path:
+  - sbto/models/unitree_g1/contact_pairs/reduced.xml
+  - sbto/models/unitree_g1/contact_pairs/robot_obj_collision.xml
+  - sbto/models/unitree_g1/contact_pairs/robot_obj_rh56e2.xml
+  - sbto/models/unitree_g1/contact_pairs/rh56e2_hand_contacts.xml
+  add_body:
+    empty_body:
+      type: body_only
+      pos: [0.4, 0.0, 0.1]
+      euler: [0., 0., 0.]
+    obj:
+      type: box
+      pos: [0., 0., 0.0105]
+      size: [0.155, 0.155, 0.17]
+      euler: [3.05, 0.11, 1.11]
+      mass: 0.6
+      rgba: [0.3, 0.3, 0.3, 1.0]
+      freejoint: true
+      bodyname: empty_body
+      group: 1
+      priority: 1
+      condim: 3
+      contype: 0
+      conaffinity: 1
+      margin: 0.0
+      gap: 0.0
+      solref: [0.04, 1.]
+      solmix: 3.
+      friction: [0.6, 0.0001, 0.0001]

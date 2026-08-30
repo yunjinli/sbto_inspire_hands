@@ -1,0 +1,16 @@
+<mujoco>
+    <sensor>
+        <!-- hands contact (rh56e2 model): l_rh_flange/r_rh_flange are the
+             root bodies of the attached hand (immediate children of
+             left_wrist_yaw_link/right_wrist_yaw_link), so subtree2 scoped
+             to them covers the hand only -- it excludes left_wrist_collision
+             (on wrist_pitch_link), the wrist_yaw_link's own left_hand_collision
+             proxy geom (a sibling of l_rh_flange under wrist_yaw_link, unused
+             for rh56e2 collision -- see contact_pairs/robot_obj_rh56e2.xml),
+             and every other wrist link. Verified against the compiled
+             g1_mjx_rh56e2.xml: subtree(l_rh_flange) contains exactly the 14
+             l_rh_*/r_rh_* hand collision geoms and nothing from the wrist. -->
+        <contact geom1="obj" subtree2="l_rh_flange" reduce="maxforce" data="found force" num="1" name="left_hand_cnt"/>
+        <contact geom1="obj" subtree2="r_rh_flange" reduce="maxforce" data="found force" num="1" name="right_hand_cnt"/>
+    </sensor>
+</mujoco>

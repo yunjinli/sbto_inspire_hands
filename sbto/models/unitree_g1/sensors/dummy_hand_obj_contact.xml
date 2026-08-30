@@ -1,0 +1,6 @@
+<mujoco>
+    <sensor>
+        <contact geom1="obj" body2="right_wrist_yaw_link" reduce="maxforce" data="found force" num="1" name="right_hand_cnt"/>
+        <contact geom1="obj" body2="left_wrist_yaw_link" reduce="maxforce" data="found force" num="1" name="left_hand_cnt"/>
+    </sensor>
+</mujoco>

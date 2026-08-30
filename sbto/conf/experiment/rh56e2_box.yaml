@@ -1,0 +1,26 @@
+# @package _global_
+# G1 + Inspire RH56E2 hands, robot-object reference tracking (box).
+#
+# Layered on top of the stock task (task=g1/robot_object_ref, unchanged):
+#   - RH56E2 body model for both the rollout and the reference scene
+#     (sbto/models/unitree_g1/scene_mjx_rh56e2.xml; hand assets come from the
+#     third_party/g1-rh56e2-assets submodule),
+#   - the two hand-specific penalties turned on -- they default to 0 in
+#     ConfigG1RobotObjRef so the stock task keeps upstream's exact cost:
+#     wrist-object contact (discourages carrying the box on the wrist instead
+#     of a palm/finger grip) and hand-floor contact,
+#   - a reference motion padded to the 41-actuator layout; convert any other
+#     OmniRetarget clip with scripts/pad_motion_for_model.py.
+#
+# Run:
+#   python sbto/main.py +experiment=rh56e2_box
+defaults:
+  - override /task/g1/sim/mj_scene@task.sim.mj_scene: rh56e2_box
+  - override /task/g1/mj_scene_ref@task.mj_scene_ref: rh56e2_box
+
+task:
+  cfg:
+    hand_floor_collision: 0.25
+    wrist_obj_collision: 0.25
+  cfg_ref:
+    motion_path: ./sbto/tasks/g1/motion/sub3_largebox_005_rh56e2_padded.npz
