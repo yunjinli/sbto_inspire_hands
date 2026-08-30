@@ -6,8 +6,7 @@
 #
 # Reference: the same sub3_largebox_005 clip with 45 lead-in and 30 tail
 # frames (1.5 s / 1 s at 30 fps), which lets the box settle onto the floor and
-# the robot reach a steady initial pose before the grasp. hand_position is
-# lowered from 5.0 because the demo's hand placement was for a different box.
+# the robot reach a steady initial pose before the grasp.
 #
 # Run:
 #   python sbto/main.py +experiment=real_box
@@ -15,7 +14,5 @@ defaults:
   - override /task/g1/sim/mj_scene@task.sim.mj_scene: real_box
 
 task:
-  cfg:
-    hand_position: 0.5
   cfg_ref:
     motion_path: ./sbto/tasks/g1/motion/sub3_largebox_005_leadin_tail.npz

@@ -46,8 +46,7 @@ pixi run python sbto/main.py +experiment=rh56e2_real_box
 
 These use a reference with 1.5 s of lead-in and 1 s of tail frames
 (`*_leadin_tail*.npz`) so the box settles and the robot reaches a steady pose
-before the grasp, and a lower `hand_position` weight (0.5) since the demo's
-hand placement was for a different box.
+before the grasp.
 
 ## Reference motions and padding
 
