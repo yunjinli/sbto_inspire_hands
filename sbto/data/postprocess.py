@@ -60,16 +60,51 @@ def split_x_traj(
 
     return extracted_data
 
-def reconstruct_x_traj_from_data_dict(data_dict):
+def reconstruct_x_traj_from_data_dict(data_dict, mj_scene: MjScene = None):
     """
     Reconstruct original trajectory dictionary from split keys.
+
+    Without mj_scene: plain concat of the tracked (root/dof/object) sub-arrays.
+    Only valid when every non-floating/non-object joint is actuated (no gaps) --
+    correct for the stock robot, wrong for robots with passive/tendon-coupled
+    joints (e.g. underactuated hands), whose qpos/qvel slots are interleaved
+    with the actuated ones rather than trailing them. Same issue that
+    ReferenceMotion.concatenate_full_state (extract_ref.py) was fixed for.
+
+    With mj_scene: scatter each sub-array into a full [T, Nq+Nv] state at its
+    true raw MuJoCo qpos/qvel address, matching that fix's convention exactly.
+    Untracked qpos entries default to mj_scene.mj_model.qpos0 (valid rest
+    pose); untracked qvel entries default to zero.
     """
-    x_traj = []
-    for k in KEYS_QPOS + KEYS_QVEL:
-        if k in data_dict:
-            print(data_dict[k].shape)
-            x_traj.append(data_dict[k])
-    return np.concatenate(x_traj, axis=-1)
+    if mj_scene is None:
+        x_traj = []
+        for k in KEYS_QPOS + KEYS_QVEL:
+            if k in data_dict:
+                x_traj.append(data_dict[k])
+        return np.concatenate(x_traj, axis=-1)
+
+    ms = mj_scene
+    T = data_dict[KEY_DOF_POS].shape[0]
+    full_x = np.zeros((T, ms.Nq + ms.Nv))
+    full_x[:, :ms.Nq] = ms.mj_model.qpos0[None, :]
+
+    if KEY_ROOT_POS in data_dict:
+        full_x[:, ms.base_pos_adr] = data_dict[KEY_ROOT_POS]
+        full_x[:, ms.base_quat_adr] = data_dict[KEY_ROOT_ROT]
+    full_x[:, ms.act_qposadr] = data_dict[KEY_DOF_POS]
+    if KEY_OBJECT_POS in data_dict:
+        full_x[:, ms.obj_pos_adr] = data_dict[KEY_OBJECT_POS]
+        full_x[:, ms.obj_quat_adr] = data_dict[KEY_OBJECT_ROT]
+
+    if KEY_ROOT_V in data_dict:
+        full_x[:, ms.base_v_adr] = data_dict[KEY_ROOT_V]
+        full_x[:, ms.base_w_adr] = data_dict[KEY_ROOT_W]
+    full_x[:, ms.act_vel_adr] = data_dict[KEY_DOF_V]
+    if KEY_OBJECT_V in data_dict:
+        full_x[:, ms.obj_v_adr] = data_dict[KEY_OBJECT_V]
+        full_x[:, ms.obj_w_adr] = data_dict[KEY_OBJECT_W]
+
+    return full_x
 
 def remove_field_from_data(traj_file_path: str, field: str) -> None:
     """

@@ -545,7 +545,19 @@ class ModelEditor():
 
     @with_callback()
     def reset(self):
-        self.mj_spec = mujoco.MjSpec.from_file(self.xml_path)
+        self.mj_spec = mujoco.MjSpec.from_file(os.path.abspath(self.xml_path))
+        # Disable BVH-activity visualization bookkeeping. With bvactive on
+        # (the default up to MuJoCo 3.11), mj_collision memsets
+        # mjData.bvh_active -- one byte per BVH node, and every <mesh> asset
+        # gets a full-face BVH regardless of contype/conaffinity -- on every
+        # step, purely so the viewer can highlight visited bounding boxes.
+        # For dense visual STLs (G1 body ~0.8M nodes, RH56E2 hands ~1.6M)
+        # that memset dominated mj_collision and saturated memory bandwidth
+        # in multithreaded rollouts. It has no effect on physics (bit-exact)
+        # or on rendering meshes. MuJoCo flips this default to "false" in the
+        # release after 3.11 for the same reason (changelog: "bottleneck for
+        # models with large meshes").
+        self.mj_spec.visual.global_.bvactive = 0
         self.id : int = len(self.mj_spec.bodies)
         self.id2name : Dict[int, str] = {}
         self.name2id : Dict[str, int] = {}

@@ -50,10 +50,26 @@ class CEM(SamplingBasedSolver):
         self.dim_to_sample[self.n_dim:] = False
 
         N = 0 if self.first_it else self.N_keep
-        self.samples[N:, self.dim_to_sample] = self.sampler.sample(
+        sampled = self.sampler.sample(
             mean=self.state.mean[self.dim_to_sample],
             cov=self.state.cov[self.dim_to_sample, :][:, self.dim_to_sample],
-        )[N:]
+        )
+        if not np.isfinite(sampled).all():
+            n_sampled_dim = int(np.sum(self.dim_to_sample))
+            raise FloatingPointError(
+                "CEM.get_samples: drawn samples are non-finite (NaN/Inf). "
+                "This means state.cov has become singular/non-positive-"
+                f"definite (N_elite={self.N_elite} elite samples were used "
+                f"to estimate a {n_sampled_dim}-dim covariance, with no "
+                "regularization since cfg.std_incr=0.0). Increase "
+                "elite_frac/N_samples, or set cfg.std_incr > 0, to avoid a "
+                "degenerate covariance estimate. (Failing loudly here "
+                "instead of letting NaN control knots silently propagate "
+                "into the rollout, where they surface as a confusing "
+                "downstream crash, e.g. PchipInterpolator 'y must contain "
+                "only finite values'.)"
+            )
+        self.samples[N:, self.dim_to_sample] = sampled[N:]
 
         if np.any(self.collapsed_dim):
             self.samples[:, self.collapsed_dim] = self.state.mean[None, self.collapsed_dim]
@@ -62,9 +78,33 @@ class CEM(SamplingBasedSolver):
     
     def get_elites(self, samples: Array, costs: Array) -> Tuple[Array, IntArray]:
         """
-        Returns (elites, elite_idx)
+        Returns (elites, elite_idx).
+
+        Samples with non-finite cost (NaN/Inf, e.g. from a diverged physics
+        rollout) are excluded before elite selection: np.argpartition's
+        behavior is documented as undefined in the presence of NaN, and we
+        never want a diverged sample to be treated as elite/best.
+        If every sample this iteration is non-finite, returns (None, None).
         """
-        elites_idx = np.argpartition(costs, self.N_elite)[:self.N_elite]
+        finite_mask = np.isfinite(costs)
+        n_finite = int(np.count_nonzero(finite_mask))
+        if n_finite < costs.shape[0]:
+            print(
+                f"[CEM] Warning: {costs.shape[0] - n_finite}/{costs.shape[0]} "
+                "sample costs are non-finite (NaN/Inf) this iteration; "
+                "excluding them from elite selection."
+            )
+        if n_finite == 0:
+            return None, None
+
+        finite_idx = np.flatnonzero(finite_mask)
+        n_elite = min(self.N_elite, n_finite)
+        if n_elite >= n_finite:
+            elites_idx = finite_idx
+        else:
+            finite_costs = costs[finite_idx]
+            part = np.argpartition(finite_costs, n_elite)[:n_elite]
+            elites_idx = finite_idx[part]
         elites_idx = elites_idx[np.argsort(costs[elites_idx])]
 
         elites = samples[elites_idx]
@@ -88,6 +128,17 @@ class CEM(SamplingBasedSolver):
         Update the solver state from elite samples.
         """
         elites, elites_idx = self.get_elites(samples, costs)
+        if elites is None:
+            # Every sample this iteration had non-finite cost (total
+            # divergence). Keep the previous distribution and best-so-far
+            # untouched rather than corrupting them with NaN/Inf.
+            print(
+                "[CEM] Warning: all samples had non-finite cost this "
+                "iteration; skipping distribution/best update."
+            )
+            self.first_it = False
+            return
+
         self.update_distrib_param(self.state, elites)
         if self.N_keep > 0:
             self.samples[:self.N_keep] = elites[:self.N_keep]
@@ -96,5 +147,5 @@ class CEM(SamplingBasedSolver):
         best = samples[arg_min]
         min_cost = costs[arg_min]
         self.update_min_cost_best(self.state, min_cost, best, best_id=arg_min)
-        
+
         self.first_it = False

@@ -152,9 +152,27 @@ def plot_costs(
         title (str): Title for the plot.
     """
     all_costs = np.asarray(all_costs)
-    # max cost is mean cost at iteration -1 (remove outliers)
-    max_lim_cost = 3. * np.mean(all_costs[-1, :])
-    all_costs = np.clip(all_costs, None, max_lim_cost)
+    n_nonfinite = np.sum(~np.isfinite(all_costs))
+    if n_nonfinite > 0:
+        print(
+            f"[plot_costs] Warning: {n_nonfinite}/{all_costs.size} sample costs "
+            "are NaN/Inf (non-finite). This indicates the physics rollout diverged "
+            "for those samples. Excluding them from axis-limit computation."
+        )
+    # max cost is mean cost at iteration -1 (remove outliers), ignoring
+    # non-finite entries so a single diverged sample can't NaN out the plot.
+    last_it_finite = all_costs[-1, :][np.isfinite(all_costs[-1, :])]
+    if last_it_finite.size > 0:
+        max_lim_cost = 3. * np.mean(last_it_finite)
+    else:
+        # Entire last iteration is non-finite: fall back to the largest
+        # finite cost anywhere in the run, or a hardcoded fallback if none.
+        finite_all = all_costs[np.isfinite(all_costs)]
+        max_lim_cost = float(np.max(finite_all)) if finite_all.size > 0 else 1.0
+    # Clip finite values to the limit and pin non-finite (diverged) samples
+    # to the same limit, so violinplot/kde never sees a NaN/Inf.
+    finite_mask = np.isfinite(all_costs)
+    all_costs = np.where(finite_mask, np.clip(all_costs, None, max_lim_cost), max_lim_cost)
     Nit = all_costs.shape[0]
     plt.close('all')
     plt.figure(figsize=(10, 5))

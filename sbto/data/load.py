@@ -7,8 +7,10 @@ from sbto.data.utils import solver_state_path_from_rundir
 from sbto.data.constants import *
 
 def _get_state_from_rundir(rundir: str, solver: SamplingBasedSolver, suffix: str) -> SolverState:
-    filename = solver_state_path_from_rundir(rundir, suffix)
-    solver_state_file = os.path.join(rundir, filename)
+    # solver_state_path_from_rundir already joins rundir -- joining again
+    # produced <rundir>/<rundir>/solver_state_*.npz and broke every caller,
+    # including warm_start.rundir.
+    solver_state_file = solver_state_path_from_rundir(rundir, suffix)
     solver_state_0 = copy.deepcopy(solver.state)
     data = np.load(solver_state_file)
     for k, v in data.items():

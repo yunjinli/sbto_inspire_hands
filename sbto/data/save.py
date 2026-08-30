@@ -175,6 +175,32 @@ def save_results(
  
     top_samples, top_costs = get_top_samples(last_costs, all_samples, N_top_samples)
 
+    # If the single requested "best" sample has non-finite cost, every
+    # sample in the saved window diverged (NaN/Inf physics rollout) -- see
+    # get_top_samples' warning above. Rather than silently saving a NaN
+    # "best" trajectory (which also crashes plot_costs downstream), fall
+    # back to the solver's own running best-so-far, which update_min_cost_best
+    # / CEM.update guarantee is never corrupted by a non-finite cost.
+    if N_top_samples == 1 and top_costs.size > 0 and not np.isfinite(top_costs[0]):
+        if np.isfinite(solver_state_final.min_cost_all):
+            print(
+                "[save_results] Warning: requested top sample has non-finite "
+                "cost (total divergence in the final optimization window). "
+                "Falling back to solver_state_final.best_all "
+                f"(cost={solver_state_final.min_cost_all}) instead of saving "
+                "a NaN/Inf 'best' trajectory."
+            )
+            top_samples = solver_state_final.best_all[None, :]
+            top_costs = np.array([solver_state_final.min_cost_all])
+        else:
+            print(
+                "[save_results] Warning: requested top sample has non-finite "
+                "cost AND solver_state_final has no finite best_all either -- "
+                "the whole optimization run appears to have diverged. Saving "
+                "the non-finite result as-is; downstream consumers should "
+                "treat this run as failed."
+            )
+
     if multiple_shooting:
         x_shooting = task.ref.x[sim.t_knots]
         t, x_traj, qdes_traj, obs_traj = map(np.squeeze, sim.rollout_multiple_shooting(top_samples, x_shooting, with_x0=True))

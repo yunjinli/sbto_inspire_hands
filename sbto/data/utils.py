@@ -109,10 +109,10 @@ def solver_state_path_from_rundir(rundir: str, suffix: str = "") -> str:
         filename = f"{SOLVER_STATE_NAME}.npz"
     return os.path.join(rundir, filename)
 
-def load_best_trajectory_from_rundir(rundir: str, with_full_state: bool = True):
+def load_best_trajectory_from_rundir(rundir: str, with_full_state: bool = True, mj_scene=None):
     data_path = os.path.join(rundir, f"{BEST_TRAJECTORY_FILENAME}.npz")
     data = dict(np.load(data_path))
     if with_full_state:
-        x_traj = reconstruct_x_traj_from_data_dict(data)
+        x_traj = reconstruct_x_traj_from_data_dict(data, mj_scene=mj_scene)
         data[KEY_FULL_STATE] = x_traj
     return data

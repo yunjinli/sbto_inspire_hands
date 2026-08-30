@@ -178,16 +178,43 @@ class ReferenceMotion:
         return out
 
     def concatenate_full_state(self, qpos_dict, vel_dict) -> np.ndarray:
-        all = []
-        for k in KEYS_QPOS :
-            v = qpos_dict.get(k, None)
-            if v is not None:
-                all.append(v)
-        for k in KEYS_QVEL:
-            v = vel_dict.get(k, None)
-            if v is not None:
-                all.append(v)
-        return np.hstack(all)
+        """
+        Scatter the tracked (root/dof/object) sub-trajectories into a full
+        [T, Nq+Nv] state addressed by raw MuJoCo qpos/qvel indices -- required
+        because downstream consumers (compute_sensor_data, sim.set_initial_state,
+        add_state_cost_from_ref) index self.x directly with mj_scene.act_qposadr /
+        act_vel_adr / base_*_adr / obj_*_adr, which are raw addresses, not
+        sequential positions. A plain hstack of the tracked sub-arrays only
+        happens to equal this for robots where every non-floating/non-object
+        joint is actuated (no gaps); it silently misaligns for robots with
+        passive/tendon-coupled joints (e.g. underactuated hands), whose qpos/qvel
+        slots are interleaved with the actuated ones rather than trailing them.
+        Untracked (passive) qpos entries default to the model's own qpos0 (a
+        valid rest pose, respecting quaternion identity); untracked qvel entries
+        default to zero.
+        """
+        ms = self.mj_scene
+        T = len(self.time)
+        full_x = np.zeros((T, ms.Nq + ms.Nv))
+        full_x[:, :ms.Nq] = ms.mj_model.qpos0[None, :]
+
+        if KEY_ROOT_POS in qpos_dict:
+            full_x[:, ms.base_pos_adr] = qpos_dict[KEY_ROOT_POS]
+            full_x[:, ms.base_quat_adr] = qpos_dict[KEY_ROOT_ROT]
+        full_x[:, ms.act_qposadr] = qpos_dict[KEY_DOF_POS]
+        if KEY_OBJECT_POS in qpos_dict:
+            full_x[:, ms.obj_pos_adr] = qpos_dict[KEY_OBJECT_POS]
+            full_x[:, ms.obj_quat_adr] = qpos_dict[KEY_OBJECT_ROT]
+
+        if KEY_ROOT_V in vel_dict:
+            full_x[:, ms.base_v_adr] = vel_dict[KEY_ROOT_V]
+            full_x[:, ms.base_w_adr] = vel_dict[KEY_ROOT_W]
+        full_x[:, ms.act_vel_adr] = vel_dict[KEY_DOF_V]
+        if KEY_OBJECT_V in vel_dict:
+            full_x[:, ms.obj_v_adr] = vel_dict[KEY_OBJECT_V]
+            full_x[:, ms.obj_w_adr] = vel_dict[KEY_OBJECT_W]
+
+        return full_x
 
     def compute_sensor_data(self, sensor_names: List[str]):
         """
