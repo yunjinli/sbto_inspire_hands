@@ -1,0 +1,18 @@
+# @package _global_
+# Dummy hands + the real cardboard box. Same as dummy_hands_box but with the
+# real_box rollout scene, the lead-in/tail padded reference, and the lowered
+# hand_position weight -- see experiment/real_box.yaml.
+#
+# Run:
+#   python sbto/main.py +experiment=dummy_hands_real_box
+defaults:
+  - override /task/g1/sim/mj_scene@task.sim.mj_scene: dummy_hands_real_box
+  - override /task/g1/mj_scene_ref@task.mj_scene_ref: dummy_hands_box
+
+task:
+  cfg:
+    hand_position: 0.5
+    hand_floor_collision: 0.25
+    wrist_obj_collision: 0.25
+  cfg_ref:
+    motion_path: ./sbto/tasks/g1/motion/sub3_largebox_005_padded.npz

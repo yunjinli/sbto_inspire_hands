@@ -1,0 +1,50 @@
+# RH56E2 hands + the real cardboard box (280 x 205 x 125 mm, 280 mm edge
+# vertical). Same hands/sensors/contact pairs as rh56e2_box.yaml, same object
+# block as real_box.yaml -- see that file for the box orientation/pos rationale.
+# Rollout scene only: the reference scene keeps the original OmniRetarget box
+# (use mj_scene_ref=rh56e2_box), see sbto/tasks/task_mj_ref.py:30.
+_target_: sbto.sim.scene_mj.MjScene
+cfg:
+  _target_: sbto.sim.scene_mj.ConfigMjScene
+  xml_scene_path: sbto/models/unitree_g1/scene_mjx_rh56e2.xml
+  xml_sensors_path:
+  - sbto/models/unitree_g1/sensors/feet_contact.xml
+  - sbto/models/unitree_g1/sensors/feet_pos.xml
+  - sbto/models/unitree_g1/sensors/rh56e2_hands_pos.xml
+  - sbto/models/unitree_g1/sensors/obj_collision.xml
+  - sbto/models/unitree_g1/sensors/obj.xml
+  - sbto/models/unitree_g1/sensors/rh56e2_hand_obj_contact.xml
+  - sbto/models/unitree_g1/sensors/torso.xml
+  - sbto/models/unitree_g1/sensors/self_collision.xml
+  xml_contact_pairs_path:
+  - sbto/models/unitree_g1/contact_pairs/reduced.xml
+  - sbto/models/unitree_g1/contact_pairs/robot_obj_collision.xml
+  - sbto/models/unitree_g1/contact_pairs/robot_obj_rh56e2.xml
+  - sbto/models/unitree_g1/contact_pairs/rh56e2_hand_contacts.xml
+  add_body:
+    empty_body:
+      type: body_only
+      pos: [0.4, 0.0, 0.1]
+      euler: [0., 0., 0.]
+    obj:
+      type: box
+      # pos.z = 0.0105 + (0.17 - half_z), as in real_box.yaml
+      pos: [0., 0., 0.0405]
+      # Half-extents. Full size 205 x 125 x 280 mm.
+      size: [0.1025, 0.0625, 0.140]
+      euler: [3.05, 0.11, 1.11]
+      # TODO set to the measured mass of the real box, markers attached.
+      mass: 0.6
+      rgba: [0.3, 0.3, 0.3, 1.0]
+      freejoint: true
+      bodyname: empty_body
+      group: 1
+      priority: 1
+      condim: 3
+      contype: 0
+      conaffinity: 1
+      margin: 0.0
+      gap: 0.0
+      solref: [0.04, 1.]
+      solmix: 3.
+      friction: [0.6, 0.0001, 0.0001]
