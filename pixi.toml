@@ -1,0 +1,38 @@
+[workspace]
+name = "sbto"
+version = "0.0.1"
+description = "Sampling-Based Trajectory Optimization framework."
+channels = ["conda-forge"]
+platforms = ["linux-64"]
+
+[environments]
+default = { features = ["core"], no-default-feature = true }
+dev = { features = ["core", "dev"], no-default-feature = true }
+
+[feature.core.dependencies]
+python = "3.12.*"
+
+[feature.core.pypi-dependencies]
+# Editable install of this repo itself, so `import sbto...` works the same
+# way `uv run` (via [tool.setuptools.packages.find]) already made it work.
+sbto = { path = ".", editable = true }
+
+numpy = ">=2.3.3"
+tqdm = ">=4.66"
+mujoco = ">=3.3.7"
+scipy = ">=1.16.2"
+numba = ">=0.62.1"
+pyyaml = "*"
+matplotlib = "*"
+opencv-python = "*"
+hydra-core = ">=1.3.2"
+seaborn = ">=0.13.2"
+pandas = ">=2.3.3"
+flask = ">=3.0"
+
+[feature.dev.pypi-dependencies]
+pytest = "*"
+black = "*"
+ruff = "*"
+mypy = "*"
+pre-commit = "*"
