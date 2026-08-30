@@ -18,4 +18,4 @@ task:
   cfg:
     hand_position: 0.5
   cfg_ref:
-    motion_path: ./sbto/tasks/g1/motion/sub3_largebox_005_padded.npz
+    motion_path: ./sbto/tasks/g1/motion/sub3_largebox_005_leadin_tail.npz

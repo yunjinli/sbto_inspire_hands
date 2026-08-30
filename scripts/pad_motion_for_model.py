@@ -18,7 +18,7 @@ column indices.
 
     python scripts/pad_motion_for_model.py \
         datasets/robot-object/sub3_largebox_005_original.npz \
-        sbto/tasks/g1/motion/sub3_largebox_005_rh56e2_padded.npz \
+        sbto/tasks/g1/motion/sub3_largebox_005_original_rh56e2.npz \
         --src-scene box --dst-scene rh56e2_box
 """
 

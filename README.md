@@ -122,8 +122,8 @@ Each of the three also has a `*_real_box` variant (`+experiment=real_box`,
 `dummy_hands_real_box`, `rh56e2_real_box`) that swaps the rollout object for
 our physical 280 x 205 x 125 mm cardboard box while the reference scene keeps
 the OmniRetarget box the demo was recorded with. These use a reference with
-1.5 s of lead-in and 1 s of tail frames (`sub3_largebox_005_padded*.npz`) so
-the box settles and the robot reaches a steady pose before the grasp, and a
+1.5 s of lead-in and 1 s of tail frames (`sub3_largebox_005_leadin_tail*.npz`)
+so the box settles and the robot reaches a steady pose before the grasp, and a
 lower `hand_position` weight (0.5) since the demo's hand placement was for a
 different box.
 
@@ -141,10 +141,10 @@ this by joint name (finger joints get the model's rest pose):
 ```bash
 python3 scripts/pad_motion_for_model.py \
     datasets/robot-object/sub10_largebox_000_original.npz \
-    sbto/tasks/g1/motion/sub10_largebox_000_rh56e2_padded.npz \
+    sbto/tasks/g1/motion/sub10_largebox_000_original_rh56e2.npz \
     --src-scene box --dst-scene rh56e2_box
 python3 sbto/main.py +experiment=rh56e2_box \
-    task.cfg_ref.motion_path=sbto/tasks/g1/motion/sub10_largebox_000_rh56e2_padded.npz
+    task.cfg_ref.motion_path=sbto/tasks/g1/motion/sub10_largebox_000_original_rh56e2.npz
 ```
 
 What else changed relative to upstream, and why:
