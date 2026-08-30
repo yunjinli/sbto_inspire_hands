@@ -73,12 +73,46 @@ exists after scene assembly), copies every shared joint's columns, and fills
 joints the source doesn't have with the target model's rest pose. It refuses
 to drop source joints silently.
 
+### Lead-in / lead-out (time padding)
+
+OmniRetarget clips are cut from the middle of a human capture: frame 0 is
+mid-stride (peak joint velocity of the whole clip, one foot off the floor,
+torso leaning over the box) and the last frame is still moving. A real robot
+cannot be placed into that state, and a locomotion policy hands over an
+upright, standing robot. `scripts/prepend_motion_leadin.py` eases from a
+standing keyframe (default `loco`, the pose the deployed locomotion policy
+actually settles into) into the demo's first frame, and from the demo's last
+frame back to standing while decelerating -- smoothstep in the joints, slerp
+on the base orientation, so there is no velocity step at the joins. The
+lead-in/out only needs to be a tracking *cost*, not dynamically feasible;
+SBTO finds the feasible way to perform it.
+
+The shipped motions were generated exactly by:
+
+```bash
+# stock layout, 1.5 s lead-in + 1 s lead-out:
+pixi run python scripts/prepend_motion_leadin.py \
+    sbto/tasks/g1/motion/sub3_largebox_005_original.npz \
+    -o sbto/tasks/g1/motion/sub3_largebox_005_leadin_tail.npz --tail-seconds 1.0
+
+# then re-lay-out for the RH56E2 model:
+pixi run python scripts/pad_motion_for_model.py \
+    sbto/tasks/g1/motion/sub3_largebox_005_leadin_tail.npz \
+    sbto/tasks/g1/motion/sub3_largebox_005_leadin_tail_rh56e2.npz \
+    --src-scene box --dst-scene rh56e2_box
+```
+
+(Order matters: add the lead-in/out on the stock 43-column layout first --
+`prepend_motion_leadin.py` intentionally refuses other layouts -- then convert
+joints.) The horizon grows by the padded frames (193 -> 268 here), so check
+the solver's `T`/knot budget on long clips.
+
 Naming convention in `sbto/tasks/g1/motion/`:
 
 | suffix | meaning |
 |---|---|
-| `_rh56e2` | joint layout converted for the RH56E2 model (output of the script) |
-| `leadin_tail` | 1.5 s lead-in + 1 s tail frames added (time padding) |
+| `_rh56e2` | joint layout converted for the RH56E2 model (`pad_motion_for_model.py`) |
+| `leadin_tail` | 1.5 s lead-in + 1 s lead-out frames added (`prepend_motion_leadin.py`) |
 
 ## Why the source changed
 
