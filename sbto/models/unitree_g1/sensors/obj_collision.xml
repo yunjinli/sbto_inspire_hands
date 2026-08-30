@@ -10,5 +10,21 @@
         <contact subtree1="empty_body" geom2="torso_collision" data="found" num="1" name="torso_obj"/>
         <contact subtree1="empty_body" geom2="pelvis_collision" data="found" num="1" name="pelvis_obj"/>
         <contact subtree1="empty_body" geom2="head_collision" data="found" num="1" name="head_obj"/>
+
+        <!-- unwanted hand - floor contact -->
+        <contact geom1="floor" subtree2="left_wrist_pitch_link" data="found" num="1" name="left_hand_floor_cnt"/>
+        <contact geom1="floor" subtree2="right_wrist_pitch_link" data="found" num="1" name="right_hand_floor_cnt"/>
+
+        <!-- unwanted wrist - obj contact. Uses geom2 (not subtree2) matched
+             to the single dedicated wrist collision geom on the wrist_pitch
+             link, so it fires only for genuine wrist-object contact and
+             never overlaps with hand contact (left_hand_cnt/right_hand_cnt
+             in hand_obj_contact.xml / rh56e2_hand_obj_contact.xml), even
+             though the hand is downstream of the wrist in the kinematic
+             tree. left_wrist_collision/right_wrist_collision exist with the
+             same name/body in both the no-hands and rh56e2 models, so this
+             single definition is valid for both. -->
+        <contact geom1="obj" geom2="left_wrist_collision" data="found" num="1" name="left_wrist_obj_cnt"/>
+        <contact geom1="obj" geom2="right_wrist_collision" data="found" num="1" name="right_wrist_obj_cnt"/>
     </sensor>
 </mujoco>

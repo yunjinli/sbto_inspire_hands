@@ -1,0 +1,16 @@
+<mujoco>
+    <sensor>
+        <!-- hands contact for the stock (no-hands) model. This is the exact
+             definition upstream SBTO carried inline in obj.xml: a subtree match
+             from the wrist_pitch link, so it counts the hand proxy geom
+             (left/right_hand_collision on the wrist_yaw link) and the wrist
+             geom alike -- unchanged here on purpose, so the stock model's
+             contact cost and reference contact plan stay identical to
+             upstream. It lives in its own file because the hand models need a
+             different, hand-only definition: see rh56e2_hand_obj_contact.xml
+             and dummy_hand_obj_contact.xml. Each mj_scene config includes the
+             variant matching its body model. -->
+        <contact geom1="obj" subtree2="left_wrist_pitch_link" reduce="maxforce" data="found force" num="1" name="left_hand_cnt"/>
+        <contact geom1="obj" subtree2="right_wrist_pitch_link" reduce="maxforce" data="found force" num="1" name="right_hand_cnt"/>
+    </sensor>
+</mujoco>

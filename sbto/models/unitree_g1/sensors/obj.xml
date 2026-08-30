@@ -5,8 +5,12 @@
         <!-- obj position and orientation  -->
         <framepos objtype="geom" objname="obj" name="global_pos_obj"/>
         <framequat objtype="geom" objname="obj" name="global_quat_obj"/>
-        <!-- hands contact -->
-        <contact geom1="obj" subtree2="left_wrist_pitch_link" reduce="maxforce" data="found force" num="1" name="left_hand_cnt"/>
-        <contact geom1="obj" subtree2="right_wrist_pitch_link" reduce="maxforce" data="found force" num="1" name="right_hand_cnt"/>
+        <!-- hands contact (left_hand_cnt/right_hand_cnt) is model-specific:
+             the no-hands model has no dedicated hand body/subtree (only a
+             left_hand_collision/right_hand_collision proxy geom directly on
+             the wrist_yaw link), while the rh56e2 model has a real hand
+             subtree rooted at l_rh_flange/r_rh_flange. See
+             hand_obj_contact.xml (no-hands) / rh56e2_hand_obj_contact.xml
+             (rh56e2), included alongside this file by each mj_scene config. -->
     </sensor>
 </mujoco>

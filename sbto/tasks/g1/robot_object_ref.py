@@ -50,6 +50,11 @@ class ConfigG1RobotObjRef():
     contact_obj_weight: float = 1.
     contact_hands_weight: float = 0.25
     collision_obj_robot: float = 0.25
+    # Hand-model additions, off by default so the stock (no-hands) task keeps
+    # upstream's exact cost. The hand task configs (robot_object_ref_rh56e2 /
+    # robot_object_ref_dummy_hands) turn them on.
+    hand_floor_collision: float = 0.
+    wrist_obj_collision: float = 0.
     self_collision: float = 1.
 
 class G1RobotObjRef(TaskMjRef):
@@ -303,6 +308,22 @@ class G1RobotObjRef(TaskMjRef):
             hamming_dist_nb,
             ref_values=np.zeros((self.T-1, len(G1.Sensors.OBJ_ROBOT_COLLISION)), dtype=np.int32),
             weights=cfg.collision_obj_robot,
+        )
+        # Unwanted hand - floor contact
+        self.add_sensor_cost(
+            G1.Sensors.HAND_FLOOR_CONTACTS,
+            hamming_dist_nb,
+            ref_values=np.zeros((self.T-1, len(G1.Sensors.HAND_FLOOR_CONTACTS)), dtype=np.int32),
+            weights=cfg.hand_floor_collision,
+        )
+        # Unwanted wrist - obj contact (discourages wrist-carrying/wrist-mashing
+        # in place of a genuine palm/finger grip; left_hand_cnt/right_hand_cnt
+        # above are hand-only, so this does not double-penalize real hand contact)
+        self.add_sensor_cost(
+            G1.Sensors.WRIST_OBJ_CONTACTS,
+            hamming_dist_nb,
+            ref_values=np.zeros((self.T-1, len(G1.Sensors.WRIST_OBJ_CONTACTS)), dtype=np.int32),
+            weights=cfg.wrist_obj_collision,
         )
         # Self collision robot-robot
         self.add_sensor_cost(

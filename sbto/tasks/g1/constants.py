@@ -37,6 +37,14 @@ class Sensors:
         "pelvis_obj",
         "head_obj"
     ]
+    HAND_FLOOR_CONTACTS = [
+        "left_hand_floor_cnt",
+        "right_hand_floor_cnt",
+    ]
+    WRIST_OBJ_CONTACTS = [
+        "left_wrist_obj_cnt",
+        "right_wrist_obj_cnt",
+    ]
     HAND_POS = [
         "left_hand_pos",
         "right_hand_pos",
