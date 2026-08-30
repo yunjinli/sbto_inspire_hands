@@ -167,11 +167,3 @@ these:
    already-joined path, breaking `warm_start.rundir`;
    `scripts/visualize_traj.py --no-ref` now builds only the sim, so runs
    whose saved config predates a sensor file rename still replay.
-
-## Verification
-
-Beyond unit-level checks, the port was validated by replaying previously
-optimized runs through this code: the saved PD-target trajectories reproduce
-their saved states to `0.0` (bit-exact) for the stock model, the RH56E2 model
-and the dummy-hands model, and the stock scene compiles with upstream's
-sensor set (in upstream's order) plus only the four new contact sensors.
